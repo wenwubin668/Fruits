@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
+    'cloud' => env('FILESYSTEM_CLOUD', 'oss'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,6 +42,16 @@ return [
     */
 
     'disks' => [
+        'oss' => [
+            'driver'        => 'oss',
+            'access_id'     => 'LTAI6L7zArTr1eix',
+            'access_key'    => 'grewmYQ7hdeAmI7xRNPevGZ3mwgsAz',
+            'bucket'        => 'fruits-data',
+            'endpoint'      => 'oss-cn-qingdao.aliyuncs.com',
+            'cdnDomain'     => 'fruits.ffbin.com',
+            'isCName'       => '',
+            'debug'         => false,
+        ],
 
         'local' => [
             'driver' => 'local',
