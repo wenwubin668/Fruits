@@ -10,7 +10,9 @@
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
-        "aliyuncs/oss-sdk-php": "~2.0.0"
+        "aliyuncs/oss-sdk-php": "~2.0.0",
+        "jacobcyl/ali-oss-storage": "^2.1",
+        "overtrue/laravel-wechat": "~4.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
