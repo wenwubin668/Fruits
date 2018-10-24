@@ -7,11 +7,20 @@ use Encore\Admin\Controllers\Dashboard;
 use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class HomeController extends Controller
 {
     public function index(Content $content)
     {
+
+        Cache::put('nihao','word',3);
+
+        dd(Cache::get('nihao'));
+
+
+
         return $content
             ->header('系统总览')
             ->description('')
