@@ -11,6 +11,7 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index');
-    $router->get('/example/index', 'ExampleController@index');
+    $router->resource('/goods', 'GoodsController');
+
 
 });
