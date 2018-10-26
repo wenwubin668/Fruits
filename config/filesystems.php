@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'local'),
+    'default' => env('FILESYSTEM_DRIVER', 'oss'),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,9 +46,9 @@ return [
             'driver'        => 'oss',
             'access_id'     => 'LTAI6L7zArTr1eix',
             'access_key'    => 'grewmYQ7hdeAmI7xRNPevGZ3mwgsAz',
-            'bucket'        => 'fruits-data',
-            'endpoint'      => 'oss-cn-qingdao.aliyuncs.com',
-            'cdnDomain'     => 'fruits.ffbin.com',
+            'bucket'        => 'fruits-disk',
+            'endpoint'      => 'oss-cn-beijing.aliyuncs.com',
+            'cdnDomain'     => 'img.ffbin.com',
             'isCName'       => false,
             'debug'         => false,
         ],

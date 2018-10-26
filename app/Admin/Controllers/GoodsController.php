@@ -9,6 +9,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Log;
 
 class GoodsController extends Controller
 {
@@ -151,9 +152,7 @@ class GoodsController extends Controller
         $form->currency('price','现价')->symbol('¥');
         $form->number('num','库存');
         $form->radio('status','状态')->options([1=>'正常',2=>'下架']);
-        // 多图
-        $form->multipleImage('imgs','图片');
-
+        $form->multipleImage('img','图片')->removable()->uniqueName();
         $form->text('desc','简介');
         $form->textarea('intro','描述')->rows(5);
         $form->editor('content','内容');

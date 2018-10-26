@@ -1,5 +1,8 @@
 <?php
 
+//ini_set('error_reporting', E_ALL);
+//ini_set('display_errors', 1);
+
 return [
 
     /*
@@ -159,7 +162,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Jacobcyl\AliOSS\AliOssServiceProvider::class,
+
         /*
          * Package Service Providers...
          */
@@ -172,7 +175,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        Jacobcyl\AliOSS\AliOssServiceProvider::class,
 
     ],
 
