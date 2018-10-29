@@ -13,5 +13,5 @@ Route::group([
     $router->get('/', 'HomeController@index');
     $router->resource('/goods', 'GoodsController');
 
-
+    $router->post('/upload','UploadController@index');
 });
