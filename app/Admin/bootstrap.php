@@ -20,12 +20,3 @@
 
 Encore\Admin\Form::forget(['map']);
 
-/*use Encore\Admin\Facades\Admin;
-
-Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
-
-    $navbar->left('html...');
-
-    $navbar->right('html...');
-
-});*/
