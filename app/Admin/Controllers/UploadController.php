@@ -9,25 +9,62 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Services\OssService;
 use Illuminate\Http\Request;
 
 class UploadController extends Controller
 {
-    public function index(Request $request){
-        $ck = $request->get('CKEditorFuncNum');
-        if ($request->hasFile('upload')) {     //upload为ckeditor默认的file提交ID
-            $file = $request->file('upload');   //从请求数据内容中取出图片的内容
-            $allowed_extensions = ["png", "jpg", "gif"]; //允许的图片后缀
-            if ($file->getClientOriginalExtension() && !in_array($file->getClientOriginalExtension(), $allowed_extensions)) {
-                return '图片后缀只支持png,jpg,gif,请检查！';
+    //wangEditor 上传图片
+    public function uploadImg(Request $request)
+    {
+        $file = $request->file("mypic");
+        // dd($file);
+        if (!empty($file)) {
+            foreach ($file as $key => $value) {
+                $len = $key;
             }
-            $destinationPath = 'images/'.date('Ymd');  //图片存放路径
-            $extension = $file->getClientOriginalExtension();  //获得文件后缀
-            $fileName = md5(time()) . '.' . $extension;  //创建图片名字
-            $result = $file->move($destinationPath, $fileName); //存储图片到路径
-            $url = 'http://img.ffbin.com/' .$destinationPath. $fileName; //输出图片网站中浏览路径
-            //echo $url;
-            echo "<script>window.parent.CKEDITOR.tools.callFunction($ck, '$url', '');</script>";
+            if ($len > 25) {
+                return response()->json(['ResultData' => 6, 'info' => '最多可以上传25张图片']);
+            }
+            $m = 0;
+            $k = 0;
+            for ($i = 0; $i <= $len; $i++) {
+                // $n 表示第几张图片
+                $n = $i + 1;
+                if ($file[$i]->isValid()) {
+                    if (in_array(strtolower($file[$i]->extension()), ['jpeg', 'jpg', 'gif', 'gpeg', 'png'])) {
+                        //$picname = $file[$i]->getClientOriginalName();//获取上传原文件名
+                        $ext = $file[$i]->getClientOriginalExtension();//获取上传文件的后缀名
+                        // 重命名
+                        $filename = md5(time()). "." . $ext;
+                        $dir = 'images/'.date('Ymd').'/';
+                        if ($file[$i]->move($dir, $filename)) {
+                            $newFileName = $dir . $filename;
+                            //上传到oss
+                            $res = OssService::getInstance()->upload($newFileName,$newFileName);
+                            if($res){
+                                unlink($newFileName);//删除本地图片
+                            }
+                            $src = '//'.env('REDIS_CNAME').'/'.$newFileName;
+
+                            $m = $m + 1;
+                            // return response()->json(['ResultData' => 0, 'info' => '上传成功', 'newFileName' => $newFileName ]);
+                        } else {
+                            $k = $k + 1;
+                            // return response()->json(['ResultData' => 4, 'info' => '上传失败']);
+                        }
+                        $msg = $m . "张图片上传成功 " . $k . "张图片上传失败<br>";
+                        $return[] = ['ResultData' => 0, 'info' => $msg, 'newFileName' => $src];
+                    } else {
+                        return response()->json(['ResultData' => 3, 'info' => '第' . $n . '张图片后缀名不合法!<br/>' . '只支持jpeg/jpg/png/gif格式']);
+                    }
+                } else {
+                    return response()->json(['ResultData' => 1, 'info' => '第' . $n . '张图片超过最大限制!<br/>' . '图片最大支持2M']);
+                }
+            }
+        } else {
+            return response()->json(['ResultData' => 5, 'info' => '请选择文件']);
         }
+        return $return;
     }
 }

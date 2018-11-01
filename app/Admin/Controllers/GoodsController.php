@@ -155,7 +155,7 @@ class GoodsController extends Controller
         $form->multipleImage('img','图片')->removable()->uniqueName();
         $form->text('desc','简介');
         $form->textarea('intro','描述')->rows(5);
-        $form->ckeditor('content','内容');
+        $form->wang_editor('content','内容');
         return $form;
     }
 }

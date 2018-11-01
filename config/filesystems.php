@@ -44,11 +44,11 @@ return [
     'disks' => [
         'oss' => [
             'driver'        => 'oss',
-            'access_id'     => 'LTAI6L7zArTr1eix',
-            'access_key'    => 'grewmYQ7hdeAmI7xRNPevGZ3mwgsAz',
-            'bucket'        => 'fruits-disk',
-            'endpoint'      => 'oss-cn-beijing.aliyuncs.com',
-            'cdnDomain'     => 'img.ffbin.com',
+            'access_id'     => env('REDIS_ACCESS_KEY'),
+            'access_key'    => env('REDIS_ACCESS_KEY_SECRET'),
+            'bucket'        => env('REDIS_BUCKET_NAME'),
+            'endpoint'      => env('REDIS_ENDPOINT'),
+            'cdnDomain'     => env('REDIS_CNAME'),
             'isCName'       => false,
             'debug'         => false,
         ],

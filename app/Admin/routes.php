@@ -13,5 +13,6 @@ Route::group([
     $router->get('/', 'HomeController@index');
     $router->resource('/goods', 'GoodsController');
 
-    $router->post('/upload','UploadController@index');
+    //编辑器图片上传
+    $router->post('/uploadFile','UploadController@uploadImg');
 });
