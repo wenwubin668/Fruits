@@ -11,8 +11,9 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\DB;
 
-class GoodsController extends Controller
+class OrderController extends Controller
 {
     use HasResourceActions;
 
@@ -25,7 +26,7 @@ class GoodsController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('商品列表')
+            ->header('订单列表')
             ->description('description')
             ->body($this->grid());
     }
@@ -82,53 +83,46 @@ class GoodsController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new GoodsModel());
+        $grid = new Grid(new OrderModel());
+
+        $grid->disableCreateButton();//禁用创建按钮
+        $grid->disableActions();//禁用行操作列
+        $grid->disableRowSelector();//禁用行选择checkbox
 
         $grid->actions(function ($actions) {
             $actions->disableDelete();//关闭删除按钮
             //$actions->disableEdit();//关闭编辑按钮
             $actions->disableView();//关闭预览按钮
         });
+        //筛选条件
+//        $grid->model()->where('progress','=',2);
 
-        $grid->id('ID')->sortable();
-        $grid->title('标题');
-        $grid->pre_price('原价');
-        $grid->price('现价');
-
-        $grid->column('type','类型')->display(function ($type){
-            $str = CommonConf::$goodsType[$type];
-            return "<span >$str</span>";
-        })->sortable();
-
-        $grid->column('num','库存')->display(function ($num){
-            $str = "<span style='%s'>$num</span>";
-            if($num >= 0 && $num < 10){
-                $color = 'color:red';
-            }else{
-                $color = 'color:green';
-            }
-            return sprintf($str,$color);
-        })->sortable();
-
-        // 显示多图
-        $grid->img('商品图片')->display(function ($pictures) {
-            return $pictures;
-        })->image('', 100, 100);
-//        $grid->status('状态')->using([1=>'正常',2=>'下架']);
-        $grid->column('status','状态')->display(function ($status){
-            $att = [1=>'正常',2=>'下架'];
-            $str = "<span style='%s'>$att[$status]</span>";
-            if($status == 2){
-                $color = 'color:red';
-            }else{
-                $color = 'color:green';
-            }
-            return sprintf($str,$color);
+        //过滤不必要的字段
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            // 在这里添加字段过滤器
+            $filter->equal('out_trade_no', '订单编号');
+            $filter->equal('transaction_id', '微信订单号');
+            $filter->between('created_at', '时间')->datetime();
         });
-        $grid->desc('简介');
-        $grid->created_at('创建时间');
-        $grid->updated_at('更新时间');
 
+        $grid->column('uid','用户名/手机号')->display(function ($uid){
+
+            $user = DB::table('sg_user')->where('id', $uid)->first();
+            return $user->nickname.' / '.$user->mobile;
+        });
+
+
+        $grid->out_trade_no('订单编号');
+        $grid->transaction_id('微信订单号');
+        $grid->progress('进度')->editable('select', CommonConf::$orderType);
+        $grid->send_no('快递单号')->editable();
+        $grid->column('content','订单内容')->display(function ($content){
+            return "<span >$content</span>";
+        });
+        $grid->total_price('订单总价');
+        $grid->created_at('创建时间')->sortable();
 
         return $grid;
     }
@@ -158,16 +152,8 @@ class GoodsController extends Controller
     protected function form()
     {
         $form = new Form(new OrderModel());
-        $form->text('title', '标题');
-        $form->select('type','类型')->options(CommonConf::$goodsType);
-        $form->currency('pre_price','原价')->symbol('¥');
-        $form->currency('price','现价')->symbol('¥');
-        $form->number('num','库存');
-        $form->radio('status','状态')->options([1=>'正常',2=>'下架']);
-        $form->multipleImage('img','图片')->removable()->uniqueName();
-        $form->text('desc','简介');
-        $form->textarea('intro','描述')->rows(5);
-        $form->wang_editor('content','内容');
+        $form->text('progress', '订单进度');
+        $form->text('send_no', '快递单号');
         return $form;
     }
 }

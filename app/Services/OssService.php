@@ -28,6 +28,12 @@ class OssService extends Service
         $this->bucketName = env('REDIS_BUCKET_NAME');
     }
 
+    /**
+     * 保存本地图片到oss
+     * @param $fileName @要保存的路径及名称
+     * @param $url @本地图片地址
+     * @return bool|string
+     */
     public function upload($fileName,$url){
         try {
             $this->ossClient->uploadFile($this->bucketName,$fileName,$url);
