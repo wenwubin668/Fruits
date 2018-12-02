@@ -10,6 +10,7 @@ namespace App\Http\Controllers\WeiXin;
 
 
 use App\Http\Controllers\Controller;
+use App\Services\User\UserService;
 use App\Services\WeiXin\WechatEventService;
 use App\Services\WeiXin\WeChatMessageService;
 use Illuminate\Support\Facades\Log;
@@ -18,6 +19,25 @@ class WxServerController extends Controller
 {
 
     public function index(){
+
+
+        $arr = [
+            'subscribe'=>1,
+            'nickname'=>'房佳斌',
+            'openid'=>'oWuSv02XeiYTidgZAp1uhiZhHSZc',
+            'sex'=>1,
+            'province'=>'北京',
+            'country'=>'中国',
+            'city'=>'东城',
+            'headimgurl'=>'http://thirdwx.qlogo.cn/mmopen/wbKdib81ny6ibW5fUd99eegVp1xHIx7j1pNva0L3ZWlBwbsKB8xLibapU8HhewJiaNiaNwXACjiafGVVp8hoqW9zwhdmCibSZIkCJfh/132',
+            'appid'=>'wx569d05951ef042ad',
+        ];
+
+        $res = UserService::getInstance()->addUser($arr);
+
+        dd($res);
+
+
         echo phpinfo();
     }
 

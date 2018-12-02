@@ -17,11 +17,7 @@ use Illuminate\Support\Facades\Log;
 class UserService extends Service
 {
     protected static $instance;
-    protected $db;
-    public function __construct()
-    {
-       $this->db = DB::connection('mysql');
-    }
+    protected $cacheTime = 60*24*30;
 
     /**
      * 添加微信用户
@@ -29,13 +25,22 @@ class UserService extends Service
      * @return mixed
      */
     public function addUser($info) {
-        Log::info('UserService::addUser ', $info);
-
-        $info['created_at'] = date('Y-m-d H:i:s');
-        $res = $this->db->table('sg_user')->insert($info);
-
-
-        Log::info('UserService::addUser res:', $res);
+        Log::info('UserService::addUser', $info);
+        $ck = 'addUser_'.$info['openid'];
+        if(Cache::get($ck)){
+            $info['updated_at'] = date('Y-m-d H:i:s');
+            $res = DB::table('sg_user')
+                ->where('openid',$info['openid'])
+                ->update($info);
+        }else{
+            $info['created_at'] = date('Y-m-d H:i:s');
+            $res = DB::table('sg_user')
+                ->insert($info);
+        }
+        if($res){
+            Cache::put($ck,$info,$this->cacheTime);
+        }
+        return $res;
     }
 
     /**
