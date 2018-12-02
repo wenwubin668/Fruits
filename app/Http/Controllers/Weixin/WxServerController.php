@@ -19,7 +19,7 @@ class WxServerController extends Controller
 {
 
     public function index(){
-        echo '通了......';
+        echo phpinfo();
     }
 
     //开启微信开发者
