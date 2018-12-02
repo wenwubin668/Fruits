@@ -18,7 +18,7 @@ class UserService extends Service
 {
     protected static $instance;
     protected $cacheTime = 60*24*30;
-    protected $cacheKey = 60*24*30;
+    protected $cacheKey = 'v1';
 
     /**
      * 添加微信用户
