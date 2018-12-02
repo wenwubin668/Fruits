@@ -24,9 +24,10 @@ class WxServerController extends Controller
     //开启微信开发者
     public function check(){
         $app = app('wechat.official_account.zhenhao');
-        $app->server->push(function ($message) use ($app) {
+
+        /*$app->server->push(function ($message) use ($app) {
             return self::wechatListen($app,$message);
-        });
+        });*/
         $response = $app->server->serve();
         return $response;
     }
