@@ -5,4 +5,7 @@ Route::namespace('Weixin')->group(function() {
     Route::any('check' , 'WxServerController@check');
 
 
+    Route::get('index' , 'WxServerController@index');
+
+
 });

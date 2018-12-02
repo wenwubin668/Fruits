@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Log;
 
 class WxServerController extends Controller
 {
+
+    public function index(){
+        echo '通了......';
+    }
+
     //开启微信开发者
     public function check(){
         $app = app('wechat.official_account.zhenhao');
