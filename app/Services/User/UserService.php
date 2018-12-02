@@ -30,7 +30,11 @@ class UserService extends Service
      */
     public function addUser($info) {
         Log::info('UserService::addUser ', $info);
+
+        $info['created_at'] = date('Y-m-d H:i:s');
         $res = $this->db->table('sg_user')->insert($info);
+
+
         Log::info('UserService::addUser res:', $res);
     }
 
