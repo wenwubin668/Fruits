@@ -30,9 +30,9 @@ class WxServerController extends Controller
         //$config = config('wechat.official_account.zhenhao');
         //$app = Factory::officialAccount($config);
 
-        /*$app->server->push(function ($message) use ($app) {
+        $app->server->push(function ($message) use ($app) {
             return self::wechatListen($app,$message);
-        });*/
+        });
 
         $response = $app->server->serve();
         return $response;
@@ -46,7 +46,7 @@ class WxServerController extends Controller
         switch ($message['MsgType']) {
             case 'event':
                 //@todo 关注、取关、扫描二维码、点击菜单
-                return WeChatEventService::getInstance()->handleEvent($officailAccount, $message,$type=2);
+                return WeChatEventService::getInstance()->handleEvent($officailAccount, $message);
                 break;
             case 'text':
                 return WeChatMessageService::getInstance()->handleTextMsg($officailAccount, $message,$type=2);

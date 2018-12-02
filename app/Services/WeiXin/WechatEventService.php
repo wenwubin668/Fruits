@@ -9,6 +9,7 @@
 namespace App\Services\WeiXin;
 
 use App\Services\Service;
+use App\Services\User\UserService;
 use EasyWeChat\Kernel\Messages\Media;
 use EasyWeChat\Kernel\Messages\News;
 use EasyWeChat\Kernel\Messages\NewsItem;
@@ -37,7 +38,7 @@ class WeChatEventService extends Service
      * @param int $type
      * @return string
      */
-    public function handleEvent($officialAccount, $message,$type=1)
+    public function handleEvent($officialAccount, $message)
     {
         Log::debug('WechatEventService::handleEvent');
 
@@ -45,7 +46,6 @@ class WeChatEventService extends Service
         $this->message = $message;
         $this->appid = $this->officialAccount->getConfig()['app_id'];
         $this->openid = $message['FromUserName'];
-        $this->type = $type;
 
         //注册事件类型处理方法
         $this->regiserEventKeyParser();
@@ -59,7 +59,7 @@ class WeChatEventService extends Service
             call_user_func([$this, $event], $officialAccount, $message);
             //添加/更新潜客信息
             if ($this->potentialUserInfo) {
-                //PotentialUserService::getInstance()->addUser($this->potentialUserInfo);
+                UserService::getInstance()->addUser($this->potentialUserInfo);
             }
             //发送消息
             if ($this->returnMsg) {
@@ -72,7 +72,6 @@ class WeChatEventService extends Service
             $err['msg'] = $e->getMessage();
             Log::warning('WechatEventService::handleEvent error:', $err);
         }
-
         return '';
     }
 
@@ -83,10 +82,10 @@ class WeChatEventService extends Service
     private function regiserEventKeyParser() {
         $this->eventKeyParsers = [
             'subscribe' => [
-                'qrscene_wxShareReg' => 'wxShareReg',//分享邀请码
+
             ],
             'scan' => [
-                'conpoint' => 'conPointEntrance',//管控点入口
+
             ],
         ];
     }
@@ -115,7 +114,7 @@ class WeChatEventService extends Service
      * 获取微信用户信息
      */
     protected function initUserInfo($refreshCache = false) {
-        $this->potentialUserInfo = WechatUserService::getInstance()->getUserInfo($this->officialAccount, $this->openid, $refreshCache);
+        $this->potentialUserInfo = UserService::getInstance()->getUserInfo($this->officialAccount, $this->openid, $refreshCache);
         $this->potentialUserInfo['appid'] = $this->appid;
     }
 
@@ -131,40 +130,8 @@ class WeChatEventService extends Service
         //初始化微信用户信息
         $this->initUserInfo(true);
 
-        if (Service::isSpaceStation($this->appid) && $this->type==1) {
-            if (env('WECHAT_SUBSCRIBE_NEWS_MEDIA_ID_SPACE_STATION')) {
-                $media = new Media(env('WECHAT_SUBSCRIBE_NEWS_MEDIA_ID_SPACE_STATION'), 'mpnews');
-                $ret = $officialAccount->customer_service->message($media)->to($this->openid)->send();
-                Log::info(__CLASS__ . '.subscribe 发送图文消息 ret', (array) $ret);
-            }
-        } elseif($this->appid == 'wx23a2e45470239e65' && $this->type==1){
-            return $this->returnMsg = "Hi, 欢迎来到壹点壹滴——中国最具影响力的幼教互联网平台！\n\n以技术引领幼教产业全面升级，用爱和责任推动幼儿教育公平。在幼教互联新时代，让我们一起成为变革的先锋，赢得中国幼教下半场。\n\n更多精彩，请点击下方菜单～[Yeah!]";
-        }else {
-
-
-            $isSYS = OfficialAccountService::getInstance()->isYdYd($this->appid);
-
-            if ($isSYS) {  //大号
-                $returnMsg = $this->getSubContent(0);
-            } else { //小号
-                $schoolInfo = SchoolInfoService::getInstance()->getSchoolInfosByAppid($this->appid);
-                if (isset($schoolInfo['code']) && $schoolInfo['code'] == 0) {
-                    $schoolData = $schoolInfo['data'];
-                    if (count($schoolData) > 0) { //如果有学校信息
-                        $returnMsg = $this->getSubContent($schoolData['0']['schoolId'],$schoolData['0']['name']);
-                    } else {
-                        $returnMsg = $this->getSubContent(0);
-                    }
-                }
-            }
-            $this->returnMsg = $returnMsg;
-
-
-            //调用事件处理方法(放到下面如果有参数，则覆盖上面的returnmsg)
-            $this->callEventKeyParser('subscribe');
-
-        }
-
+        //调用事件处理方法(放到下面如果有参数，则覆盖上面的returnmsg)
+        $this->callEventKeyParser('subscribe');
     }
 
     /**
@@ -175,8 +142,8 @@ class WeChatEventService extends Service
     {
         $message['appid'] = $this->appid;
         Log::debug('WechatEventService::unsubscribe', $message);
-        $this->potentialUserInfo = [];
-        PotentialUserService::getInstance()->unsubscribe($this->openid);
+        //$this->potentialUserInfo = [];
+        //PotentialUserService::getInstance()->unsubscribe($this->openid);
     }
 
     /**
@@ -194,38 +161,6 @@ class WeChatEventService extends Service
         $this->callEventKeyParser('scan');
     }
 
-    //获取地址
-    private function getResourceUrl($resourceId,$schoolId,$openid,$appid){
-        if(intval($resourceId)==0){
-            $init_url = env('YDYD_FROENTEDN_HBSQ').'?school_id='.$schoolId;
-        }else{
-            $resource = CoaxBabyService::getInstance()->getDetail($resourceId)['data'];
-            if($resource['resourceType']==2){//视频
-                $init_url = env('YDYD_FROENTEDN_HBSQ').'/play-video?id='.$resourceId.'&school_id='.$schoolId;
-            }else{
-                $init_url = env('YDYD_FROENTEDN_HBSQ').'/audio?id='.$resourceId.'&school_id='.$schoolId;
-            }
-        }
-        $arr['openid'] = $openid;
-        $arr['appid'] = $appid;
-        $arr['url'] = $init_url;
-        $url = RedirectService::getInstance()->redirectUrl($arr);
-        return $url;
-    }
-
-    /**
-     * 微信网页授权回调
-     * @param $officialAccount
-     * @param $message
-     */
-    public function view($officialAccount, $message) {
-        Log::debug('WechatEventService::view');
-
-        //初始化微信用户信息
-        $this->initUserInfo();
-        //修正绑定表中openid的appid
-        BindUserService::getInstance()->updateBindUserAppid($this->openid, $this->appid);
-    }
 
 
     //发送客服图文消息
