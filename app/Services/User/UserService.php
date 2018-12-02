@@ -18,6 +18,7 @@ class UserService extends Service
 {
     protected static $instance;
     protected $cacheTime = 60*24*30;
+    protected $cacheKey = 60*24*30;
 
     /**
      * 添加微信用户
@@ -26,7 +27,7 @@ class UserService extends Service
      */
     public function addUser($info) {
         Log::info('UserService::addUser', $info);
-        $ck = 'addUser_'.$info['openid'];
+        $ck = implode('_',['addUser',$this->cacheKey,$info['openid']]);
         if(Cache::get($ck)){
             $info['updated_at'] = date('Y-m-d H:i:s');
             $res = DB::table('sg_user')
