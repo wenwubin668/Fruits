@@ -12,6 +12,7 @@ namespace App\Http\Controllers\WeiXin;
 use App\Http\Controllers\Controller;
 use App\Services\WeiXin\WechatEventService;
 use App\Services\WeiXin\WeChatMessageService;
+use EasyWeChat\Factory;
 use Illuminate\Support\Facades\Log;
 
 class WxServerController extends Controller
@@ -25,11 +26,13 @@ class WxServerController extends Controller
     public function check(){
         $app = app('wechat.official_account.zhenhao');
 
+
+        //$config = config('wechat.official_account.zhenhao');
+        //$app = Factory::officialAccount($config);
+
         /*$app->server->push(function ($message) use ($app) {
             return self::wechatListen($app,$message);
         });*/
-
-
 
         $response = $app->server->serve();
         return $response;
