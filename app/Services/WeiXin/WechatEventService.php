@@ -132,6 +132,8 @@ class WeChatEventService extends Service
 
         //调用事件处理方法(放到下面如果有参数，则覆盖上面的returnmsg)
         $this->callEventKeyParser('subscribe');
+
+        $this->returnMsg = '欢迎关注~~~[Hey][Hey][Hey]';
     }
 
     /**
