@@ -12,6 +12,7 @@ namespace App\Http\Controllers\WeiXin;
 use App\Http\Controllers\Controller;
 use App\Services\WeiXin\WechatEventService;
 use App\Services\WeiXin\WeChatMessageService;
+use Illuminate\Support\Facades\Log;
 
 class WxServerController extends Controller
 {
