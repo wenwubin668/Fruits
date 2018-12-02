@@ -28,6 +28,9 @@ class WxServerController extends Controller
         /*$app->server->push(function ($message) use ($app) {
             return self::wechatListen($app,$message);
         });*/
+
+
+
         $response = $app->server->serve();
         return $response;
     }
