@@ -58,7 +58,7 @@ return [
             'aes_key' => env('WECHAT_ZHENHAO_AES_KEY'),
             'oauth' => [
                 'scopes'   => ['snsapi_userinfo'],
-                'callback' => '/weixin/recruit/ddwlcallback',
+                'callback' => '/weixin/callback',
             ],
         ],
 
