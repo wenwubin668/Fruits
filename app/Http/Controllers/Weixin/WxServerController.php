@@ -12,7 +12,6 @@ namespace App\Http\Controllers\WeiXin;
 use App\Http\Controllers\Controller;
 use App\Services\WeiXin\WechatEventService;
 use App\Services\WeiXin\WeChatMessageService;
-use EasyWeChat\Factory;
 use Illuminate\Support\Facades\Log;
 
 class WxServerController extends Controller
@@ -26,12 +25,8 @@ class WxServerController extends Controller
     public function check(){
         $app = app('wechat.official_account.zhenhao');
 
-
-        //$config = config('wechat.official_account.zhenhao');
-        //$app = Factory::officialAccount($config);
-
         $app->server->push(function ($message) use ($app) {
-            return self::wechatListen($app,$message);
+            return self::weChatListen($app,$message);
         });
 
         $response = $app->server->serve();
@@ -40,16 +35,16 @@ class WxServerController extends Controller
 
 
     //事件处理
-    public static function wechatListen($officailAccount, $message)
+    public static function weChatListen($app, $message)
     {
-        Log::info('WxServerController::wechatListen ', $message);
+        Log::info('WxServerController::wechatListen', $message);
         switch ($message['MsgType']) {
             case 'event':
                 //@todo 关注、取关、扫描二维码、点击菜单
-                return WeChatEventService::getInstance()->handleEvent($officailAccount, $message);
+                return WeChatEventService::getInstance()->handleEvent($app, $message);
                 break;
             case 'text':
-                return WeChatMessageService::getInstance()->handleTextMsg($officailAccount, $message,$type=2);
+                return WeChatMessageService::getInstance()->handleTextMsg($app, $message);
                 break;
             case 'image': break;
             case 'voice': break;
