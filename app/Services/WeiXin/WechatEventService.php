@@ -150,6 +150,7 @@ class WeChatEventService extends Service
         $message['appid'] = $this->appid;
         Log::debug('WechatEventService::unsubscribe', $message);
 
+        $this->potentialUserInfo['status'] = 0;
         UserService::getInstance()->updateUser($this->potentialUserInfo);
 
         //$this->potentialUserInfo = [];
