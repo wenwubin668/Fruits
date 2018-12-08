@@ -151,6 +151,8 @@ var polaroidGallery = (function () {
     function navigation() {
         var next = document.getElementById('next');
         var preview = document.getElementById('preview');
+        var start = document.getElementById('start');
+        var stop = document.getElementById('stop');
 
         next.addEventListener('click', function () {
             var currentIndex = Number(currentItem.id) + 1;
@@ -168,8 +170,32 @@ var polaroidGallery = (function () {
             }
             select(dataSize[currentIndex].item);
             shuffleAll();
-        })
+        });
+        start.addEventListener('click', function () {
+            initLoop();
+        });
+        stop.addEventListener('click', function () {
+            stopLoop();
+        });
     }
+    var setNext;
+    function initLoop() {
+        //循环执行，每隔1秒钟执行一次 1000
+        setNext = setInterval(initNext, 1000);
+        function initNext() {
+            var currentIndex = Number(currentItem.id) + 1;
+            if (currentIndex >= dataLength) {
+                currentIndex = 0
+            }
+            select(dataSize[currentIndex].item);
+            shuffleAll();
+        }
+    }
+    function stopLoop() {
+        clearInterval(setNext);
+    }
+
 
     return polaroidGallery;
 })();
+
