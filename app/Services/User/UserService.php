@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 class UserService extends Service
 {
     protected static $instance;
-    protected $cacheTime = 60*24*30;
+    protected $cacheTime = 60*24*3;
     protected $cacheKey = 'v1';
 
     /**
@@ -27,20 +27,53 @@ class UserService extends Service
      */
     public function addUser($info) {
         Log::info('UserService::addUser', $info);
-        $ck = implode('_',['addUser',$this->cacheKey,$info['openid']]);
-        if(Cache::get($ck)){
-            $info['updated_at'] = date('Y-m-d H:i:s');
-            $res = DB::table('sg_user')
-                ->where('openid',$info['openid'])
-                ->update($info);
-        }else{
-            $info['created_at'] = date('Y-m-d H:i:s');
-            $res = DB::table('sg_user')
-                ->insert($info);
-        }
+        $info['created_at'] = date('Y-m-d H:i:s');
+        $res = DB::table('sg_user')
+            ->insert($info);
+        return $res;
+    }
+
+    /**
+     * 更新用户数据
+     * @param $info
+     * @return bool
+     */
+    public function updateUser($info){
+        Log::info('UserService::updateUser', $info);
+
+        $info['updated_at'] = date('Y-m-d H:i:s');
+        $res = DB::table('sg_user')
+            ->where('openid',$info['openid'])
+            ->update($info);
         if($res){
-            Cache::put($ck,$info,$this->cacheTime);
+            $this->getOneUser($info['openid'],0);
         }
+        return true;
+    }
+
+    /**
+     * 根据openid获取用户信息
+     * @param string $openid
+     * @param bool $caching
+     * @return array|\Illuminate\Database\Query\Builder|mixed
+     */
+    public function getOneUser($openid='',$caching=true){
+        Log::info('UserService::getOneUser :'.$openid);
+        if(empty($openid)){
+            return [];
+        }
+        $ck = implode('_',['getOneUser',$openid,$this->cacheKey]);
+        if ($caching === 0) {Cache::forget($ck);return;}
+        if ($caching === false) Cache::forget($ck);
+        if ($re = Cache::get($ck)) return $re;
+
+        $res = DB::table('sg_user')
+            ->where('openid',$openid)
+            ->first();
+        $res = (array) $res;
+
+        Cache::put($ck,$res,$this->cacheTime);
+
         return $res;
     }
 
@@ -71,8 +104,8 @@ class UserService extends Service
     }
 
     /**
+     * 整理微信用户数据
      * @param $user
-     * {"subscribe":1,"openid":"oG3oIxOxPfi06VR1xIdhLB5AEa5c","nickname":"啊哈","sex":1,"language":"zh_CN","city":"昌平","province":"北京","country":"中国","headimgurl":"http://thirdwx.qlogo.cn/mmopen/6x6KvRhqKyZ8pyd244WDibJib4t57RfZYbQ6ic2k0RSxKW6EtrZicBeGLPL9XFfte4U9y1sOKnveTGsacoohNmVVZpv4wOibOb2tl/132","subscribe_time":1529935400,"remark":"","groupid":0,"tagid_list":[],"subscribe_scene":"ADD_SCENE_PROFILE_CARD","qr_scene":0,"qr_scene_str":""} {"logId":"5b30f6288ccc3","ip":"223.166.222.108"}
      * @return array
      */
     public function formatUserInfo($user) {

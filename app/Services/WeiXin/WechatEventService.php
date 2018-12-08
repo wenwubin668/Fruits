@@ -59,7 +59,12 @@ class WeChatEventService extends Service
             call_user_func([$this, $event], $officialAccount, $message);
             //添加/更新潜客信息
             if ($this->potentialUserInfo) {
-                UserService::getInstance()->addUser($this->potentialUserInfo);
+                $info = UserService::getInstance()->getOneUser($this->openid);
+                if(empty($info)){
+                    UserService::getInstance()->addUser($this->potentialUserInfo);
+                }else{
+                    UserService::getInstance()->updateUser($this->potentialUserInfo);
+                }
             }
             //发送消息
             if ($this->returnMsg) {
