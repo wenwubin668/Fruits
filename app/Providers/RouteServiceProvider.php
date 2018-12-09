@@ -83,6 +83,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWeiXinRoutes()
     {
         Route::prefix('weixin')
+            ->middleware('web')
             ->namespace($this->namespace)
             ->group(base_path('routes/weixin.php'));
     }

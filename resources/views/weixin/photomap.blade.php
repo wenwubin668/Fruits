@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>房佳斌&朱真真</title>
     <link rel="stylesheet" type="text/css" href="/marry/css/polaroid-gallery.css?v={{time()}}"/>
+    <script type="text/javascript" src="/js/jquery-2.0.0.min.js"></script>
 </head>
 <body class="fullscreen">
 <div id="gallery" class="fullscreen"></div>
@@ -15,13 +16,13 @@
     <button id="start">开始播放</button>
     <button id="stop">停止播放</button>
 </div>
-
 <script type="text/javascript" src="/marry/js/polaroid-gallery.js?v={{time()}}"></script>
 <script>
     window.onload = function () {
         new polaroidGallery();
     }
 </script>
+
 
 </body>
 </html>

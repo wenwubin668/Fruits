@@ -26,7 +26,7 @@ var polaroidGallery = (function () {
         var i;
         for (i = 0; i < arr.length; i++) {
             out += '<figure id="' + i + '">' +
-                '<img src="' + arr[i].name + '" alt="' + arr[i].name + '"/>' +
+                '<img class="image" src="' + arr[i].name + '" alt="' + arr[i].name + '"/>' +
                 '<figcaption>' + arr[i].caption + '</figcaption>' +
                 '</figure>';
         }
@@ -195,7 +195,5 @@ var polaroidGallery = (function () {
         clearInterval(setNext);
     }
 
-
     return polaroidGallery;
 })();
-

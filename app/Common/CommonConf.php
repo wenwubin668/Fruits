@@ -30,6 +30,13 @@ class CommonConf
         self::ORDER_FINALE_SUCCESS_STATUS=>'订单完成',
     ];
 
+    //微信信息
+    const MEMCACHE_KEY_YDYD_RECRUIT_USER_INFO = 'wechat_info';
+
+
+    //网页授权
+    const WECHAT_AUTH_WAY_1 = 1;//卡片管理
+
 
 
 }
