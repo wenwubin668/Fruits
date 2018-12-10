@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
-    <title>列表</title>
+    <title>信用卡管理</title>
     <link href="//res.wx.qq.com/open/libs/weui/1.1.3/weui.min.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="/js/jquery-2.0.0.min.js"></script>
     <script type="text/javascript" src="/js/common.js?v={{time()}}"></script>

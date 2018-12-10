@@ -30,10 +30,6 @@
                 <p>
                     {{$info->desc??'暂无备注'}}
                 </p>
-                <p>
-                    <img src="./images/pic_article.png" alt="">
-                    <img src="./images/pic_article.png" alt="">
-                </p>
             </section>
         </section>
     </article>
