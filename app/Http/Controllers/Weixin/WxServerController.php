@@ -78,6 +78,8 @@ class WxServerController extends Controller
         }
         return redirect($jumpUrl);
     }
+
+
     public function saveTest(){
         $userInfo = [
         'openid'=>'oWuSv02XeiYTidgZAp1uhiZhHSZc',
