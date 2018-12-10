@@ -149,6 +149,70 @@ class CardService extends Service
     }
 
 
+
+
+    /**
+     * 添加新账单
+     * @param $param
+     * @return bool
+     */
+    public function outAmountAction($param){
+        Log::info('CardService::outAmountAction', $param);
+        $param['created_at'] = date('Y-m-d H:i:s');
+        $res = DB::table('sg_card_amount')
+            ->insert($param);
+        if($res){
+            $this->getOneCardAmountList($param['cid'],0);
+        }
+        return $res;
+    }
+
+    /**
+     * 获取新账单
+     * @param int $id
+     * @param bool $caching
+     * @return array|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|mixed|null|object|void
+     */
+    public function getOneAmount($id=0,$caching=true){
+        Log::info('CardService::getOneAmount :'.$id);
+        if(intval($id)==0){
+            return [];
+        }
+        $ck = implode('_',['getOneAmount',$id,$this->cacheKey]);
+        if ($caching === 0) {Cache::forget($ck);return;}
+        if ($caching === false) Cache::forget($ck);
+        if ($re = Cache::get($ck)) return $re;
+
+        $res = DB::table('sg_card_amount')
+            ->where('id',$id)
+            ->first();
+
+        Cache::put($ck,$res,$this->cacheTime);
+
+        return $res;
+    }
+
+    /**
+     * 更新账单
+     * @param $id
+     * @param $info
+     * @return bool
+     */
+    public function updateAmountAction($id,$info){
+        Log::info('CardService::updateAmountAction', $info);
+
+        $info['updated_at'] = date('Y-m-d H:i:s');
+        $res = DB::table('sg_card_amount')
+            ->where('id',$id)
+            ->update($info);
+        if($res){
+            $this->getOneAmount($id,0);
+            $this->getOneCardAmountList($info['cid'],0);
+        }
+        return true;
+    }
+
+
     /**
      * 获取账单列表
      * @param int $cid
@@ -171,22 +235,6 @@ class CardService extends Service
 
         Cache::put($ck,$res,$this->cacheTime);
 
-        return $res;
-    }
-
-    /**
-     * 添加新账单
-     * @param $param
-     * @return bool
-     */
-    public function outAmountAction($param){
-        Log::info('CardService::outAmountAction', $param);
-        $param['created_at'] = date('Y-m-d H:i:s');
-        $res = DB::table('sg_card_amount')
-            ->insert($param);
-        if($res){
-            $this->getOneCardAmountList($param['cid'],0);
-        }
         return $res;
     }
 

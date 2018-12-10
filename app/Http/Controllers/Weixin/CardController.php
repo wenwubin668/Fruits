@@ -17,10 +17,8 @@ use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
-
     protected $switch;
     protected $userInfo;
-
     public function __construct(Request $request)
     {
         $this->middleware(function ($request,$next){
@@ -34,8 +32,6 @@ class CardController extends Controller
             }
         });
     }
-
-
     //卡片列表
     public function list(){
         $list = CardService::getInstance()->getOneCardList($this->userInfo['id']);
@@ -74,24 +70,6 @@ class CardController extends Controller
         ];
         return view('card.action',$data);
     }
-    //账单列表
-    public function amountList(Request $request){
-        $id = $request->get('id');
-
-        $list = CardService::getInstance()->getOneCardAmountList($id);
-
-        $info = CardService::getInstance()->getOneCard($id);
-        $data = [
-            'list'=>$list,
-            'title'=>$info->name,
-            'left'=>['name'=>'返回','url'=>route('CardList')],
-            'right'=>['name'=>'详情','url'=>route('CardInfo',['id'=>$id])],
-        ];
-
-        //dump($data);
-        return view('card.amountlist',$data);
-    }
-
     //查看卡片
     public function info(Request $request){
         $id = $request->get('id');
@@ -109,6 +87,52 @@ class CardController extends Controller
         //dump($data);
         return view('card.info',$data);
     }
+    //账单列表
+    public function amountList(Request $request){
+        $id = $request->get('id');
 
+        $list = CardService::getInstance()->getOneCardAmountList($id);
 
+        $info = CardService::getInstance()->getOneCard($id);
+        $data = [
+            'list'=>$list,
+            'title'=>$info->name,
+            'date'=>date('Y-m-d'),
+            'left'=>['name'=>'返回','url'=>route('CardList')],
+            'right'=>['name'=>'详情','url'=>route('CardInfo',['id'=>$id])],
+        ];
+
+        //dump($data);
+        return view('card.amountlist',$data);
+    }
+    //账单详情
+    public function amountInfo(Request $request){
+
+        $id = $request->get('id');
+
+        $info = CardService::getInstance()->getOneAmount($id);
+
+        if($request->ajax()){
+            $post = $request->post();
+            if(!empty($post['pay_money'])){
+                $post['status'] = 2;
+            }else{
+                unset($post['pay_money']);
+            }
+            $res = CardService::getInstance()->updateAmountAction($id,$post);
+            if($res){
+                return ['code'=>0,'msg'=>'提交成功','data'=>$res,'url'=>route('CardAmountList',['id'=>$info->cid])];
+            }else{
+                return ['code'=>-1,'msg'=>'提交失败','data'=>$res];
+            }
+        }
+
+        $data = [
+            'info'=>$info,
+            'title'=>$info->amount_name.'#'.date('m',strtotime($info->pay_time)).'月代还',
+            'left'=>['name'=>'返回','url'=>route('CardAmountList',['id'=>$info->cid])],
+            //'right'=>['name'=>'添加','url'=>route('CardAction')],
+        ];
+        return view('card.amountinfo',$data);
+    }
 }

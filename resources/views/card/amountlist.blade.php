@@ -2,11 +2,11 @@
 @include('card/common/backTitle')
 
 @foreach($list as $value)
-<a class="weui-cell weui-cell_access" href="{{route('CardAmountList',['id'=>$value->id])}}">
+<a class="weui-cell weui-cell_access" href="{{route('CardAmountInfo',['id'=>$value->id])}}">
     <div class="weui-cell__bd">
-        <p>{{$value->name}} / <span style="color: {{$value->account_day==$date?'red':'green'}}">{{$value->account_day}}日</span></p>
+        <p>#<span style="color: {{$value->pay_time==$date?'red':'green'}}">{{$value->pay_time}}</span>#账单#</p>
     </div>
-    <div class="weui-cell__ft">{{number_format($value->quota,2)}}</div>
+    <div class="weui-cell__ft">{{intval($value->pay_money)?number_format($value->pay_money,2):'---'}}</div>
 </a>
 @endforeach
 

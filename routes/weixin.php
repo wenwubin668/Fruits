@@ -21,10 +21,12 @@ Route::namespace('Weixin')->group(function() {
     Route::get('cardlist' , 'CardController@list')->name('CardList');
     //添加卡片
     Route::any('cardaction' , 'CardController@action')->name('CardAction');
-    //账单列表
-    Route::get('amountlist' , 'CardController@amountList')->name('CardAmountList');
     //详情
     Route::get('info' , 'CardController@info')->name('CardInfo');
+    //账单列表
+    Route::get('amountlist' , 'CardController@amountList')->name('CardAmountList');
+    //账单详情
+    Route::any('amountinfo' , 'CardController@amountInfo')->name('CardAmountInfo');
 
 
 });
