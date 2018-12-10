@@ -7,7 +7,7 @@
     <div class="weui-cells">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input required" data_value="名称" name="name" type="text" placeholder="请填写名称">
+                <input class="weui-input required" data_value="名称" name="name" type="text" placeholder="请填写名称" value="{{$info->name}}">
             </div>
         </div>
     </div>
@@ -15,7 +15,7 @@
     <div class="weui-cells">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input required" data_value="额度" name="quota" type="number" placeholder="请填写额度">
+                <input class="weui-input required" data_value="额度" name="quota" type="number" placeholder="请填写额度" value="{{$info->quota}}">
             </div>
         </div>
     </div>
@@ -23,7 +23,7 @@
     <div class="weui-cells">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input required" data_value="账单日" name="account_day" type="number" placeholder="请填写账单日">
+                <input class="weui-input required" data_value="账单日" name="account_day" type="number" placeholder="请填写账单日" value="{{$info->account_day}}">
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
     <div class="weui-cells">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input required" data_value="还款日" name="pay_day" type="number" placeholder="请填写还款日">
+                <input class="weui-input required" data_value="还款日" name="pay_day" type="number" placeholder="请填写还款日" value="{{$info->pay_day}}">
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
                 <p>默认还款日</p>
             </div>
             <div class="weui-cell__ft">
-                <input type="radio" class="weui-check" value="1" name="pay_type" id="x11" checked="checked">
+                <input type="radio" class="weui-check" value="1" name="pay_type" id="x11"  {{$info->pay_type==1 ? 'checked="checked"':''}}>
                 <span class="weui-icon-checked"></span>
             </div>
         </label>
@@ -51,7 +51,7 @@
                 <p>出账日延后还款日</p>
             </div>
             <div class="weui-cell__ft">
-                <input type="radio" name="pay_type" value="2" class="weui-check" id="x12" >
+                <input type="radio" name="pay_type" value="2" class="weui-check" id="x12" {{$info->pay_type==2 ? 'checked="checked"':''}}>
                 <span class="weui-icon-checked"></span>
             </div>
         </label>
@@ -60,7 +60,7 @@
     <div class="weui-cells weui-cells_form">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <textarea class="weui-textarea" name="desc" placeholder="可填写备注" rows="3"></textarea>
+                <textarea class="weui-textarea" name="desc" placeholder="可填写备注" rows="3">{{$info->desc}}</textarea>
                 <div class="weui-textarea-counter"></div>
             </div>
         </div>

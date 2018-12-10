@@ -75,9 +75,16 @@ class CardController extends Controller
         $id = $request->get('id');
         $info = CardService::getInstance()->getOneCard($id);
 
-        $info->pay_day = CardService::getInstance()->getPayTime($info->account_day,$info->pay_day,$info->pay_type);
-
-        $info->account_day = CardService::getInstance()->getAccountDay($info->account_day,$info->pay_type);
+        if($request->ajax()){
+            $post = $request->post();
+            $post['uid'] = $this->userInfo['id'];
+            $res = CardService::getInstance()->updateCard($id,$post);
+            if($res){
+                return ['code'=>0,'msg'=>'提交成功','data'=>$res,'url'=>route('CardAmountList',['id'=>$id])];
+            }else{
+                return ['code'=>-1,'msg'=>'提交失败','data'=>$res];
+            }
+        }
 
         $data = [
             'info'=>$info,
@@ -85,7 +92,7 @@ class CardController extends Controller
             'left'=>['name'=>'返回','url'=>route('CardAmountList',['id'=>$id])],
         ];
         //dump($data);
-        return view('card.info',$data);
+        return view('card.action',$data);
     }
     //账单列表
     public function amountList(Request $request){
