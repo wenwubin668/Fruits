@@ -54,15 +54,17 @@ class WxServerController extends Controller
 
     //微信页面授权入口
     public function index(Request $request){
-        $type = $request->get('type',CommonConf::WECHAT_AUTH_WAY_1);
-        $url = route('WeChatIndex',['type'=>$type]);
+
+        $return_url = $request->get('return_url');
+
+        $url = route('WeChatIndex',['return_url'=>$return_url]);
 
         if(strpos($_SERVER['HTTP_HOST'],'sg.ffbin.com') === 0 ){
             $this->saveTest();
         }
+
         //页面授权获取支付的openid
         $info = session()->get(CommonConf::MEMCACHE_KEY_YDYD_RECRUIT_USER_INFO);
-
         if (empty($info)){
             $app = app('wechat.official_account.zhenhao');
             $oauth = $app->oauth;
@@ -71,12 +73,8 @@ class WxServerController extends Controller
 
             return $oauth->withRedirectUrl($redirect_uri)->redirect();
         }
-        switch ($type) {
-            case CommonConf::WECHAT_AUTH_WAY_1: //卡片管理
-                $jumpUrl = route('CardList');
-                break;
-        }
-        return redirect($jumpUrl);
+
+        return redirect(urldecode($return_url));
     }
 
 

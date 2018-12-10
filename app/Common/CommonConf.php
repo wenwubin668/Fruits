@@ -37,8 +37,6 @@ class CommonConf
     const TASK_PARSE_MAX = 100;
 
 
-    //网页授权
-    const WECHAT_AUTH_WAY_1 = 1;//卡片管理
 
 
 

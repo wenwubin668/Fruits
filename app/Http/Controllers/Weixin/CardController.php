@@ -24,7 +24,7 @@ class CardController extends Controller
         $this->middleware(function ($request,$next){
             $userInfo = session()->get(CommonConf::MEMCACHE_KEY_YDYD_RECRUIT_USER_INFO);
             if (empty($userInfo)){
-                $url = route('WeChatIndex',['type'=>CommonConf::WECHAT_AUTH_WAY_1]);
+                $url = route('WeChatIndex',['return_url'=>urlencode($request->fullUrl())]);
                 return redirect($url);
             }else{
                 $this->userInfo = UserService::getInstance()->getOneUser($userInfo['openid']);
