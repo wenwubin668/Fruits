@@ -42,8 +42,8 @@ class CardController extends Controller
 
         //整理还款日
         foreach ($list as $item){
-            $item->pay_day = $this->getPayTime($item->account_day,$item->pay_day,$item->pay_type);
-            $item->account_day = $this->getAccountDay($item->account_day,$item->pay_type);
+            $item->pay_day = CardService::getInstance()->getPayTime($item->account_day,$item->pay_day,$item->pay_type);
+            $item->account_day = CardService::getInstance()->getAccountDay($item->account_day,$item->pay_type);
         }
         $data = [
             'list'=>$list,
@@ -97,9 +97,9 @@ class CardController extends Controller
         $id = $request->get('id');
         $info = CardService::getInstance()->getOneCard($id);
 
-        $info->pay_day = $this->getPayTime($info->account_day,$info->pay_day,$info->pay_type);
+        $info->pay_day = CardService::getInstance()->getPayTime($info->account_day,$info->pay_day,$info->pay_type);
 
-        $info->account_day = $this->getAccountDay($info->account_day,$info->pay_type);
+        $info->account_day = CardService::getInstance()->getAccountDay($info->account_day,$info->pay_type);
 
         $data = [
             'info'=>$info,
@@ -108,26 +108,6 @@ class CardController extends Controller
         ];
         //dump($data);
         return view('card.info',$data);
-    }
-
-
-    //计算还款日
-    private function getPayTime($account_day,$pay_day,$type=1){
-        if($type==2){
-            $time = strtotime(date('Y').'-'.date('m').'-'.$account_day) + $pay_day*60*60*24;
-            return date('m-d',$time);
-        }else{
-            return date('m-d',strtotime(date('Y').'-'.date('m').'-'.$pay_day));
-        }
-    }
-
-    private function getAccountDay($account_day,$type=1){
-        if($type==3){
-            $days = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
-            return date('m-d',strtotime(date('Y').'-'.date('m').'-'.$days));
-        }else{
-            return date('m-d',strtotime(date('Y').'-'.date('m').'-'.$account_day));
-        }
     }
 
 

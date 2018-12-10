@@ -174,6 +174,41 @@ class CardService extends Service
         return $res;
     }
 
+    /**
+     * 添加新账单
+     * @param $param
+     * @return bool
+     */
+    public function outAmountAction($param){
+        Log::info('CardService::outAmountAction', $param);
+        $param['created_at'] = date('Y-m-d H:i:s');
+        $res = DB::table('sg_card_amount')
+            ->insert($param);
+        if($res){
+            $this->getOneCardAmountList($param['cid'],0);
+        }
+        return $res;
+    }
+
+    //计算还款日
+    public function getPayTime($account_day,$pay_day,$type=1){
+        if($type==2){
+            $time = strtotime(date('Y').'-'.date('m').'-'.$account_day) + $pay_day*60*60*24;
+            return date('m-d',$time);
+        }else{
+            return date('m-d',strtotime(date('Y').'-'.date('m').'-'.$pay_day));
+        }
+    }
+    //计算出账日
+    public function getAccountDay($account_day,$type=1){
+        if($type==3){
+            $days = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+            return date('m-d',strtotime(date('Y').'-'.date('m').'-'.$days));
+        }else{
+            return date('m-d',strtotime(date('Y').'-'.date('m').'-'.$account_day));
+        }
+    }
+
 
 
 }

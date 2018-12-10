@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        Commands\Task\OutAmount::class
     ];
 
     /**
@@ -26,6 +27,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        //每天八点出账
+        $schedule->command('task:OutAmount')->dailyAt('08:00');
     }
 
     /**
