@@ -9,6 +9,7 @@
 namespace App\Services\WeiXin;
 
 
+use App\Common\CommonConf;
 use App\Services\Service;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -38,6 +39,10 @@ class WeChatMessageService extends Service
 
         if ($message['Content'] == 'openid') {
             return $message['FromUserName'];
+        }
+        if ($message['Content'] == '#信用卡#') {
+            $url = route('CardList',['type'=>CommonConf::WECHAT_AUTH_WAY_1]);
+            return "<a href='{$url}'>信用卡列表</a>";
         }
         if ($msg = $this->directive()) {
             return $msg;
