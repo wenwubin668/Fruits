@@ -98,7 +98,7 @@ class CardController extends Controller
     public function amountList(Request $request){
         $id = $request->get('id');
 
-        $list = CardService::getInstance()->getOneCardAmountList($id);
+        $list = CardService::getInstance()->getOneCardAmountList($id,false);
 
         $info = CardService::getInstance()->getOneCard($id);
         $data = [
