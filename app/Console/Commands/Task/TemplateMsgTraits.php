@@ -1,26 +1,19 @@
 <?php
 
 
-namespace App\Console\Commands\TaskLog;
+namespace App\Console\Commands\Task;
 
-use App\Common\Conf\CommonConf;
-use App\Common\Conf\UcenterConf;
-use App\Common\Conf\WechatConf;
-use App\Common\Conf\DictConf;
+
 
 use Illuminate\Support\Facades\Cache;
-use App\Services\IncService;
 use App\Services\Service;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\BaseServices\TaskLogService;
-use App\Services\BaseServices\SendMsgLogService;
 
 trait TemplateMsgTraits{
 
-    //根据条件获取tasklog
+    /*//根据条件获取tasklog
     public function getTaskLogByCondition($condition, $max){
 
         $selectSql = "SELECT %s FROM %s WHERE %s LIMIT %d";
@@ -44,11 +37,7 @@ trait TemplateMsgTraits{
         return $taskLogs;
     }
 
-    /**
-     *  The Common handle functions to excute all tasklog .
-     *
-     * @return mixed
-     */
+    //
     public function handle()
     {
         // 处理命令行参数
@@ -158,11 +147,7 @@ trait TemplateMsgTraits{
         return $roles;
     }
 
-    /* *
-     * 获取学校园长主身份的人
-     * @param:
-     *
-     * */
+    //获取学校园长主身份的人
     public function getSchoolHeadmaster($schoolId, $withMobile=false) {
         $fields = 'r.id,r.uid,r.school_id,r.class_id,r.class_name,r.name,r.student_id,r.student_name,r.primary_identity,r.sub_identity';
         $fields .= ',b.openid,b.appid';
@@ -185,11 +170,7 @@ trait TemplateMsgTraits{
     }
 
 
-    /**
-     * 格式化单个tasklog的批量sendMsgLog信息
-     * @param:
-     *
-     */
+    //格式化单个tasklog的批量sendMsgLog信息
     public function makeSendLogInfo($taskLog, $templateCode, $toIdentity, $remendSender, $subIdentity=[]){
         $scenes = $taskLog['scenes'];
         $schoolId = $taskLog['school_id'];
@@ -323,11 +304,7 @@ trait TemplateMsgTraits{
         return $sendMsgLog;
     }
 
-    /**
-     * 格式化单个tasklog的批量sendMsgLog信息
-     * @param:
-     *
-     */
+    //格式化单个tasklog的批量sendMsgLog信息
     public function makeOfficialInfo($taskLog, $templateCode, $toIdentity, $remendSender){
         $scenes = $taskLog['scenes'];
         $schoolId = $taskLog['school_id'];
@@ -599,12 +576,7 @@ trait TemplateMsgTraits{
         return $students;
     }
 
-    /* *
-     * 根据id获取角色信息
-     * @param: roleIds (integer required) 角色编号
-     * @param: sendTime (string required) 发送时间
-     *
-     */
+    //根据id获取角色信息
     public function getRolesByIds($roleIds, $sendTime, $withMobile = false)
     {
         $fields = 'r.id,r.uid,r.school_id,r.class_id,r.class_name,r.name,r.student_id,r.student_name,r.primary_identity,r.sub_identity,b.openid, b.appid';
@@ -639,11 +611,7 @@ trait TemplateMsgTraits{
         return $roles;
     }
 
-    /* *
-     * 根据id获取学校信息
-     * @param: schoolId (integer required) 学校编号
-     *
-     */
+    //根据id获取学校信息
     public function getSchoolInfo($schoolId)
     {
         static $schoolInfo = [];
@@ -664,11 +632,7 @@ trait TemplateMsgTraits{
         return false;
     }
 
-    /* *
-     * 根据roleid获取role信息
-     * @param: roleId (integer required) 角色编号
-     *
-     */
+    //根据roleid获取role信息
     public function getRoleInfo($roleId, $withMobile = false, $schoolAppId='')
     {
         static $roleInfo = [];
@@ -700,11 +664,7 @@ trait TemplateMsgTraits{
     }
 
 
-    /* *
-     * 获取角色字典信息
-     * @param: dictCode (integer required) 角色编号
-     *
-     */
+    //获取角色字典信息
     public function getDicts($dictCode='')
     {
         $dictsCache = Cache::get('dictRroles');
@@ -839,7 +799,7 @@ trait TemplateMsgTraits{
 
             return $sendResult;
         }
-    }
+    }*/
 
     //使用redis 锁
     public function getTaskLock($taskLogId) {
@@ -878,7 +838,7 @@ trait TemplateMsgTraits{
     }
 
 
-    public function getSigned($momentType,$contentId, $roleId, $studentId, $needSignUp=1){
+    /*public function getSigned($momentType,$contentId, $roleId, $studentId, $needSignUp=1){
         if(empty($studentId)) {
             return;
         }
@@ -1010,6 +970,6 @@ trait TemplateMsgTraits{
         }
 
         return $articles[$articleId];
-    }
+    }*/
 
 }

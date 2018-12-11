@@ -62,7 +62,7 @@ class OutAmount extends Command
             //加锁处理
             $lockKey = implode('_',[$this->msgScenes,$item['id'],'v2']);
             $taskLock = $this->getTaskLock($lockKey);
-            if($taskLock){
+            if($taskLock || 1){
                 $payDate = CardService::getInstance()->getPayTime($item['account_day'],$item['pay_day'],$item['pay_type']);
                 $param = [
                     'cid'=>$item['id'],
