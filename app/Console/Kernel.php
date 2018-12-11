@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         //每天八点出账
-        $schedule->command('task:OutAmount')->everyMinute();
+        $schedule->command('task:OutAmount')->dailyAt('08:00');
     }
 
     /**

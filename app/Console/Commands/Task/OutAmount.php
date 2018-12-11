@@ -59,9 +59,9 @@ class OutAmount extends Command
         foreach ($list as $item){
             $item = (array)$item;
             //加锁处理
-            $lockKey = implode('_',[$this->msgScenes,$item['id'],'v2']);
+            $lockKey = implode('_',[$this->msgScenes,$item['id'],'v3']);
             $taskLock = $this->getTaskLock($lockKey);
-            if($taskLock || 1){
+            if($taskLock){
                 $payDate = CardService::getInstance()->getPayTime($item['account_day'],$item['pay_day'],$item['pay_type']);
                 $param = [
                     'cid'=>$item['id'],
