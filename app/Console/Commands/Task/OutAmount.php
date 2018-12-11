@@ -3,7 +3,6 @@
 namespace App\Console\Commands\Task;
 
 use App\Common\CommonConf;
-use App\Console\Commands\TaskLog\TemplateMsgTraits;
 use App\Services\Card\CardService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
